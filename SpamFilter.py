@@ -4,6 +4,11 @@
 # Based on https://pastebin.com/VU2v27bH
 # Author: Kirill Vasin
 
+import logging
+from time import time
+
+logger = logging.getLogger(__name__)
+
 class SpamFilter:
     def __init__(self):
         self.limits = {1:3, 5:7, 10:10} # max: 3 updates in 1 second, 7 updates in 5 seconds, 10 updates in 10 seconds
