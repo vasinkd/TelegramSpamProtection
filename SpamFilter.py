@@ -45,16 +45,17 @@ class SpamFilter:
 
 
     def wrapper(self, func):  # only works on functions, not on instancemethods
+        # Only works for messages (+Commands) and callback_queries (Inline Buttons)
         def func_wrapper(bot, update):
-            timeout = self.new_message(update.effective_chat.id)
+            if update.callback_query:
+                chat_id = update.callback_query.from_user.id
+            elif update.message:
+                chat_id = update.message.chat_id
+            timeout = self.new_message(chat_id)
             if not timeout:
-                func(bot, update)
+                return func(bot, update) # return is required by ConversationHandler
             elif timeout != 1:
-                # Only works for messages (+Commands) and callback_queries (Inline Buttons)
-                if update.callback_query:
-                    bot.edit_message_text(chat_id=update.effective_chat.id, text=timeout)
-                elif update.message:
-                    bot.sendMessage(chat_id=update.message.chat_id, text=timeout)
+                bot.sendMessage(chat_id=chat_id, text=timeout)
         return func_wrapper
     
 blocker = SpamFilter()
