@@ -6,6 +6,7 @@
 
 import logging
 from time import time
+from collections import deque
 
 logger = logging.getLogger(__name__)
 
